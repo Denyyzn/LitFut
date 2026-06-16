@@ -36,6 +36,7 @@ As a static web application, LitFut does not require a build step.
   - **EUR (Europe)**: 12 teams, 3 qualifiers per league.
   - **AME (Americas)**: 12 teams, 3 qualifiers per league.
   - **AAO (Africa/Asia/Oceania)**: 12 teams, 2 qualifiers per league.
+- **Cache Versioning**: Whenever you modify the application's code (HTML, CSS, JS) or assets, you MUST increment the cache version name in `service-worker.js` (e.g., from `litfut-v2` to `litfut-v3`).
 
 ## TODOs / Future Improvements
 - [ ] Add more detailed match statistics.

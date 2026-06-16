@@ -365,8 +365,6 @@ function confirmMatch(ligaId,ri,mi) {
   const sa = parseInt(document.getElementById(`sa_${ligaId}_${ri}_${mi}`).value);
   const err = document.getElementById(`err_${ligaId}_${ri}_${mi}`);
   if (isNaN(sh)||isNaN(sa)||sh<0||sa<0) { err.textContent='Placar inválido'; return; }
-  const diff = Math.abs(sh-sa);
-  if (diff!==0&&diff!==1) { err.textContent='Diferença deve ser 0 ou 1'; return; }
   state.rounds[ligaId][ri].matches[mi].sH = sh;
   state.rounds[ligaId][ri].matches[mi].sA = sa;
   state.rounds[ligaId][ri].matches[mi].played = true;
