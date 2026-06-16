@@ -91,6 +91,16 @@
       <li><span class="rtag tb">Ex</span>Resultados: 1–0, 2–1, 0–0 → PF=3, PA=1 → <b style="color:var(--green)">Saldo +2</b>, Pts=7</li>
     </ul>
   </div>
+
+  <div class="rules-card" style="border-color:var(--blue);background:linear-gradient(135deg, #000, #001122)">
+    <h3>Gerenciar Torneio</h3>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:12px">Salve seu progresso em um arquivo externo ou carregue um torneio anterior.</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-ok" style="background:var(--blue);flex:1;min-width:140px" onclick="exportStateToFile()">📥 Salvar em Arquivo</button>
+      <button class="btn btn-ghost" style="flex:1;min-width:140px" onclick="document.getElementById('fileInput').click()">📤 Carregar Arquivo</button>
+    </div>
+    <input type="file" id="fileInput" style="display:none" accept=".litfut" onchange="importStateFromFile(event)">
+  </div>
 </div>
 
 </main>

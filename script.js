@@ -446,6 +446,95 @@ function rebuildDrawGrid() {
   });
 }
 
+// ═══════════════════════════════════════════
+// FILE BACKUP (CUSTOM FORMAT)
+// ═══════════════════════════════════════════
+function serializeState(obj) {
+  let lines = ["LITFUT_SAVE_v1"];
+  lines.push(`drawn:${obj.drawn}`);
+  lines.push(`started:${obj.started}`);
+  lines.push(`activeFilter:${obj.activeFilter}`);
+  lines.push(`activeRodFilter:${obj.activeRodFilter}`);
+  
+  for (let lg in obj.leagueTeams) {
+    lines.push(`teams|${lg}:${obj.leagueTeams[lg].join(',')}`);
+  }
+  
+  for (let lg in obj.rounds) {
+    obj.rounds[lg].forEach(rd => {
+      rd.matches.forEach(m => {
+        lines.push(`match|${lg}|${rd.num}:${m.home}|${m.away}|${m.sH}|${m.sA}|${m.played}`);
+      });
+    });
+  }
+  return lines.join('\n');
+}
+
+function deserializeState(text) {
+  const lines = text.trim().split('\n');
+  if (lines[0] !== "LITFUT_SAVE_v1") throw new Error("Formato incompatível");
+  
+  let ns = { drawn:false, started:false, leagueTeams:{}, rounds:{}, activeFilter:'EUR-A', activeRodFilter:'EUR-A' };
+  
+  lines.forEach(line => {
+    if (line.startsWith('drawn:')) ns.drawn = line.split(':')[1] === 'true';
+    else if (line.startsWith('started:')) ns.started = line.split(':')[1] === 'true';
+    else if (line.startsWith('activeFilter:')) ns.activeFilter = line.split(':')[1];
+    else if (line.startsWith('activeRodFilter:')) ns.activeRodFilter = line.split(':')[1];
+    else if (line.startsWith('teams|')) {
+      const [lg, teamsStr] = line.slice(6).split(':');
+      ns.leagueTeams[lg] = teamsStr.split(',');
+    }
+    else if (line.startsWith('match|')) {
+      const [meta, data] = line.slice(6).split(':');
+      const [lg, rdNum] = meta.split('|');
+      const [home, away, sH, sA, played] = data.split('|');
+      if (!ns.rounds[lg]) ns.rounds[lg] = [];
+      let round = ns.rounds[lg].find(r => r.num === parseInt(rdNum));
+      if (!round) { round = { num: parseInt(rdNum), matches: [] }; ns.rounds[lg].push(round); }
+      round.matches.push({
+        home, away,
+        sH: sH === 'null' ? null : parseInt(sH),
+        sA: sA === 'null' ? null : parseInt(sA),
+        played: played === 'true'
+      });
+    }
+  });
+  return ns;
+}
+
+function exportStateToFile() {
+  const content = serializeState(state);
+  const blob = new Blob([content], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const date = new Date().toISOString().slice(0,10);
+  a.href = url;
+  a.download = `torneio_litfut_${date}.litfut`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importStateFromFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const loaded = deserializeState(e.target.result);
+      if (confirm('Carregar este arquivo? O progresso atual será substituído.')) {
+        state = loaded;
+        saveState();
+        location.reload();
+      }
+    } catch (err) {
+      alert('Erro: Arquivo inválido ou corrompido.');
+      console.error(err);
+    }
+  };
+  reader.readAsText(file);
+}
+
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 // ═══════════════════════════════════════════
