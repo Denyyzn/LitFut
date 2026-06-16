@@ -9,7 +9,7 @@ LitFut is a football tournament simulator built as a single-page Progressive Web
 - **PWA**: Includes a `manifest.json` and `service-worker.js` for offline functionality and installation on mobile devices.
 
 ## Directory Structure
-- `litfut.html`: The main entry point (HTML structure).
+- `index.html`: The main entry point (HTML structure).
 - `styles.css`: External stylesheet containing all application styles.
 - `script.js`: External JavaScript file containing simulation logic and state management.
 - `manifest.json`: Configuration for the Progressive Web App (name, icons, theme colors).
@@ -21,7 +21,7 @@ LitFut is a football tournament simulator built as a single-page Progressive Web
 As a static web application, LitFut does not require a build step.
 
 ### Development
-- **Run Locally**: Open `litfut.html` directly in any modern web browser.
+- **Run Locally**: Open `index.html` directly in any modern web browser.
 - **PWA Testing**: To test service worker and manifest functionality, serve the directory using a local web server:
   ```bash
   # Example using 'serve' (requires Node.js)
