@@ -1,4 +1,4 @@
-const CACHE_NAME = "litfut-v5"; // Added host country feature
+const CACHE_NAME = "litfut-v6"; // Updated host country qualification logic
 
 self.addEventListener("install", event => {
   self.skipWaiting();
