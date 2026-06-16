@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="bgGrad" cx="50%" cy="40%" r="55%">
+      <stop offset="0%" stop-color="#1a3a1a"/>
+      <stop offset="100%" stop-color="#000000"/>
+    </radialGradient>
+    <radialGradient id="ballGrad" cx="38%" cy="35%" r="60%">
+      <stop offset="0%" stop-color="#e8ffe8"/>
+      <stop offset="40%" stop-color="#c8f5c8"/>
+      <stop offset="100%" stop-color="#7ecf7e"/>
+    </radialGradient>
+    <radialGradient id="gloss" cx="35%" cy="30%" r="40%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <clipPath id="ballClip512">
+      <circle cx="256" cy="248" r="176"/>
+    </clipPath>
+  </defs>
+
+  <!-- Background -->
+  <rect width="512" height="512" rx="102" fill="url(#bgGrad)"/>
+
+  <!-- Subtle field decoration -->
+  <rect x="0" y="236" width="512" height="40" fill="#ffffff" fill-opacity="0.025"/>
+  <circle cx="256" cy="256" r="105" fill="none" stroke="#ffffff" stroke-width="2" stroke-opacity="0.04"/>
+  <line x1="0" y1="256" x2="512" y2="256" stroke="#ffffff" stroke-width="1" stroke-opacity="0.03"/>
+
+  <!-- Ball body -->
+  <circle cx="256" cy="248" r="176" fill="url(#ballGrad)"/>
+
+  <!-- Soccer panels -->
+  <g clip-path="url(#ballClip512)" fill="#1a6b1a" stroke="#1a6b1a" stroke-width="1">
+    <!-- Center pentagon -->
+    <polygon points="256,192 293,219 280,261 232,261 219,219"/>
+    <!-- Top -->
+    <polygon points="256,80 285,128 256,144 227,128"/>
+    <!-- Top-right -->
+    <polygon points="347,139 368,187 325,197 293,160"/>
+    <!-- Right -->
+    <polygon points="413,235 405,285 360,280 355,232"/>
+    <!-- Bottom-right -->
+    <polygon points="373,346 336,387 301,352 314,307"/>
+    <!-- Bottom -->
+    <polygon points="256,421 219,387 232,342 280,342 293,387"/>
+    <!-- Bottom-left -->
+    <polygon points="139,346 157,307 196,352 165,387"/>
+    <!-- Left -->
+    <polygon points="99,235 157,232 152,280 107,285"/>
+    <!-- Top-left -->
+    <polygon points="165,139 227,160 195,197 132,187"/>
+  </g>
+
+  <!-- Seam lines -->
+  <g clip-path="url(#ballClip512)" stroke="#2d8a2d" stroke-width="3.5" fill="none" opacity="0.65">
+    <line x1="256" y1="80" x2="256" y2="192"/>
+    <line x1="285" y1="128" x2="293" y2="219"/>
+    <line x1="347" y1="139" x2="293" y2="219"/>
+    <line x1="368" y1="187" x2="355" y2="232"/>
+    <line x1="413" y1="235" x2="293" y2="219"/>
+    <line x1="405" y1="285" x2="280" y2="261"/>
+    <line x1="373" y1="346" x2="280" y2="261"/>
+    <line x1="336" y1="387" x2="293" y2="387"/>
+    <line x1="256" y1="421" x2="256" y2="342"/>
+    <line x1="219" y1="387" x2="219" y2="342"/>
+    <line x1="139" y1="346" x2="232" y2="261"/>
+    <line x1="157" y1="307" x2="232" y2="261"/>
+    <line x1="99" y1="235" x2="219" y2="219"/>
+    <line x1="107" y1="285" x2="219" y2="219"/>
+    <line x1="165" y1="139" x2="219" y2="219"/>
+    <line x1="227" y1="160" x2="219" y2="219"/>
+    <line x1="219" y1="219" x2="256" y2="192"/>
+    <line x1="293" y1="219" x2="256" y2="192"/>
+    <line x1="280" y1="261" x2="293" y2="219"/>
+    <line x1="232" y1="261" x2="219" y2="219"/>
+    <line x1="232" y1="261" x2="232" y2="342"/>
+    <line x1="280" y1="261" x2="280" y2="342"/>
+  </g>
+
+  <!-- Gloss -->
+  <circle cx="256" cy="248" r="176" fill="url(#gloss)"/>
+
+  <!-- Outer glow ring -->
+  <circle cx="256" cy="248" r="176" fill="none" stroke="#3ddc3d" stroke-width="4" opacity="0.35"/>
+</svg>

@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
+  <defs>
+    <radialGradient id="bgGrad" cx="50%" cy="40%" r="55%">
+      <stop offset="0%" stop-color="#1a3a1a"/>
+      <stop offset="100%" stop-color="#000000"/>
+    </radialGradient>
+    <radialGradient id="ballGrad" cx="38%" cy="35%" r="60%">
+      <stop offset="0%" stop-color="#e8ffe8"/>
+      <stop offset="40%" stop-color="#c8f5c8"/>
+      <stop offset="100%" stop-color="#7ecf7e"/>
+    </radialGradient>
+    <radialGradient id="gloss" cx="35%" cy="30%" r="40%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <clipPath id="ballClip">
+      <circle cx="96" cy="96" r="66"/>
+    </clipPath>
+  </defs>
+
+  <!-- Subtle pitch lines -->
+  <rect x="0" y="88" width="192" height="16" rx="0" fill="#ffffff" fill-opacity="0.03"/>
+  <circle cx="96" cy="96" r="40" fill="none" stroke="#ffffff" stroke-width="1" stroke-opacity="0.05"/>
+
+  <!-- Ball body -->
+  <circle cx="96" cy="96" r="66" fill="url(#ballGrad)"/>
+
+  <!-- Soccer ball panels (classic black/dark green pentagons pattern) -->
+  <g clip-path="url(#ballClip)" fill="#1a6b1a" stroke="#1a6b1a" stroke-width="0.5">
+    <!-- Center pentagon -->
+    <polygon points="96,72 110,82 105,98 87,98 82,82"/>
+    <!-- Top -->
+    <polygon points="96,30 107,48 96,54 85,48"/>
+    <!-- Top-right -->
+    <polygon points="130,52 138,70 122,74 110,60"/>
+    <!-- Right -->
+    <polygon points="155,88 152,107 135,105 133,87"/>
+    <!-- Bottom-right -->
+    <polygon points="140,130 126,145 113,132 118,115"/>
+    <!-- Bottom -->
+    <polygon points="96,158 82,145 87,128 105,128 110,145"/>
+    <!-- Bottom-left -->
+    <polygon points="52,130 58,115 71,128 66,145"/>
+    <!-- Left -->
+    <polygon points="37,88 59,87 57,105 40,107"/>
+    <!-- Top-left -->
+    <polygon points="62,52 82,60 70,74 54,70"/>
+  </g>
+
+  <!-- Seam lines connecting panels -->
+  <g clip-path="url(#ballClip)" stroke="#2d8a2d" stroke-width="1.5" fill="none" opacity="0.7">
+    <line x1="96" y1="30" x2="96" y2="72"/>
+    <line x1="107" y1="48" x2="110" y2="82"/>
+    <line x1="130" y1="52" x2="110" y2="82"/>
+    <line x1="138" y1="70" x2="133" y2="87"/>
+    <line x1="155" y1="88" x2="110" y2="82"/>
+    <line x1="152" y1="107" x2="105" y2="98"/>
+    <line x1="140" y1="130" x2="105" y2="98"/>
+    <line x1="126" y1="145" x2="110" y2="145"/>
+    <line x1="96" y1="158" x2="96" y2="128"/>
+    <line x1="82" y1="145" x2="82" y2="128"/>
+    <line x1="52" y1="130" x2="87" y2="98"/>
+    <line x1="58" y1="115" x2="87" y2="98"/>
+    <line x1="37" y1="88" x2="82" y2="82"/>
+    <line x1="40" y1="107" x2="82" y2="82"/>
+    <line x1="62" y1="52" x2="82" y2="82"/>
+    <line x1="85" y1="48" x2="82" y2="82"/>
+    <line x1="82" y1="82" x2="96" y2="72"/>
+    <line x1="110" y1="82" x2="96" y2="72"/>
+    <line x1="96" y1="72" x2="96" y2="72"/>
+    <line x1="105" y1="98" x2="110" y2="82"/>
+    <line x1="87" y1="98" x2="82" y2="82"/>
+    <line x1="87" y1="98" x2="87" y2="128"/>
+    <line x1="105" y1="98" x2="105" y2="128"/>
+  </g>
+
+  <!-- Gloss overlay -->
+  <circle cx="96" cy="96" r="66" fill="url(#gloss)"/>
+
+  <!-- Outer ring accent -->
+  <circle cx="96" cy="96" r="66" fill="none" stroke="#3ddc3d" stroke-width="2" opacity="0.4"/>
+</svg>
