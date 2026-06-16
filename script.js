@@ -10,7 +10,7 @@ const CONFS = {
   AME: {
     label:'AME', color:'#ff9944', qual: 3,
     teams: ['Brasil','Argentina','Uruguai','México','Estados Unidos','Canadá','Colômbia','Equador','Peru','Bolívia','Jamaica','Costa Rica'],
-    flags: {'Brasil':'🇧🇷','Argentina':'🇦🇷','Uruguai':'🇺🇾','México':'🇲🇽','Estados Unidos':'🇺🇸','Canadá':'🇨🇦','Colômbia':'🇨🇴','Equador':'🇪🇨','Peru':'🇵🇪','Bolívia':'🇧🇴','Jamaica':'🇨🇷','Costa Rica':'🇨🇷'}
+    flags: {'Brasil':'🇧🇷','Argentina':'🇦🇷','Uruguai':'🇺🇾','México':'🇲🇽','Estados Unidos':'🇺🇸','Canadá':'🇨🇦','Colômbia':'🇨🇴','Equador':'🇪🇨','Peru':'🇵🇪','Bolívia':'🇧🇴','Jamaica':'🇯🇲','Costa Rica':'🇨🇷'}
   },
   AAO: {
     label:'AAO', color:'#cc44ff', qual: 2,
