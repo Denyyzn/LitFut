@@ -137,22 +137,9 @@ async function startDraw() {
   // shuffle each conf into A/B
   for (const confId of ['EUR','AME','AAO']) {
     const conf = CONFS[confId];
-    let A, B;
-    let attempts = 0;
-    
-    // Ensure no more than 2 hosts per group
-    while (attempts < 100) {
-      const shuffled = shuffle([...conf.teams]);
-      A = shuffled.slice(0,6);
-      B = shuffled.slice(6,12);
-      
-      const hostsA = A.filter(t => state.hosts.includes(t)).length;
-      const hostsB = B.filter(t => state.hosts.includes(t)).length;
-      
-      if (hostsA <= 2 && hostsB <= 2) break;
-      attempts++;
-    }
-
+    const shuffled = shuffle([...conf.teams]);
+    const A = shuffled.slice(0,6);
+    const B = shuffled.slice(6,12);
     const leagueA = confId+'-A';
     const leagueB = confId+'-B';
     state.leagueTeams[leagueA] = A;
@@ -311,15 +298,8 @@ function renderLigas() {
   const totalMatches = state.rounds[ligaId].reduce((s,r)=>s+r.matches.length,0);
   const playedMatches = state.rounds[ligaId].reduce((s,r)=>s+r.matches.filter(m=>m.played).length,0);
 
-  // Qualificação: Sede sempre passa + top não-sedes até completar qualN
-  const hostsInLeague = rows.filter(t => state.hosts.includes(t.name));
-  const nonHostsInLeague = rows.filter(t => !state.hosts.includes(t.name));
-  const numNonHostQualifiers = Math.max(0, qualN - hostsInLeague.length);
-  const nonHostQualifiersNames = nonHostsInLeague.slice(0, numNonHostQualifiers).map(t => t.name);
-  const qualifierNames = [...hostsInLeague.map(t => t.name), ...nonHostQualifiersNames];
-
   let html = `<div class="qual-info">
-    <div class="qi"><div class="qi-dot" style="background:var(--green)"></div>Classificado (${qualN} vagas)</div>
+    <div class="qi"><div class="qi-dot" style="background:var(--green)"></div>Classificado (top ${qualN})</div>
     <div class="qi"><div class="qi-dot" style="background:var(--red)"></div>Eliminado</div>
   </div>`;
 
@@ -328,7 +308,7 @@ function renderLigas() {
       <div class="liga-block-title">
         <span class="conf-dot" style="background:${conf.color}"></span>
         <span style="color:${conf.color}">${ligaId}</span>
-        <span class="qual-badge" style="color:${conf.color};border-color:${conf.color}44">${qualN} vagas (incl. Sede)</span>
+        <span class="qual-badge" style="color:${conf.color};border-color:${conf.color}44">Top ${qualN} passam</span>
       </div>
       <span class="liga-progress">${playedMatches}/${totalMatches}</span>
     </div>
@@ -342,8 +322,7 @@ function renderLigas() {
 
   rows.forEach((t,i) => {
     const isHost = state.hosts.includes(t.name);
-    const isQual = qualifierNames.includes(t.name);
-    const posClass = isQual ? (i === 0 ? 'pos-q1' : 'pos-q2') : 'pos-elim';
+    const posClass = (i < qualN || isHost) ? (i === 0 ? 'pos-q1' : 'pos-q2') : 'pos-elim';
     const saldoC = t.saldo>0?'saldo-pos':t.saldo<0?'saldo-neg':'saldo-zero';
     const saldoS = t.saldo>0?`+${t.saldo}`:t.saldo;
     const flag = conf.flags[t.name]||'🏳️';
@@ -364,7 +343,7 @@ function renderLigas() {
 
   html += `</tbody></table></div>`;
   if (playedMatches===totalMatches && totalMatches>0) {
-    const classificados = rows.filter(t => qualifierNames.includes(t.name));
+    const classificados = rows.filter((t,i) => i < qualN || state.hosts.includes(t.name));
     html = `<div class="alert">🏆 ${ligaId} encerrada! Classificados: <b>${classificados.map(t=>t.name).join(', ')}</b></div>` + html;
   }
   body.innerHTML = html;
