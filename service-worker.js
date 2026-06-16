@@ -1,4 +1,4 @@
-const CACHE_NAME = "litfut-v5"; // Added host country feature
+const CACHE_NAME = "litfut-v4"; // Incremented version after removing 1-point rule
 
 self.addEventListener("install", event => {
   self.skipWaiting();
