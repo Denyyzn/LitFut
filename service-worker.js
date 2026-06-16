@@ -1,4 +1,4 @@
-const CACHE_NAME = "litfut-v5"; // Incremented version after removing 1-point rule
+const CACHE_NAME = "litfut-v6"; // Incremented version after removing 1-point rule
 
 self.addEventListener("install", event => {
   self.skipWaiting();

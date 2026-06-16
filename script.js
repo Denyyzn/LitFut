@@ -387,7 +387,7 @@ function editMatch(ligaId,ri,mi) {
 function resetAll() {
   if (!confirm('Resetar tudo? O progresso será perdido.')) return;
   state = {drawn:false,started:false,leagueTeams:{},rounds:{},activeFilter:'EUR-A',activeRodFilter:'EUR-A'};
-  localStorage.removeItem('litfut_v1_state');
+  localStorage.removeItem('litfut_state');
   initDrawGrid();
   document.getElementById('btnDraw').textContent='⚽ Iniciar Sorteio';
   document.getElementById('btnDraw').disabled=false;
@@ -403,7 +403,7 @@ function resetAll() {
 // ═══════════════════════════════════════════
 // PERSISTENCE
 // ═══════════════════════════════════════════
-const STORAGE_KEY = 'litfut_v1_state';
+const STORAGE_KEY = 'litfut_state';
 function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
 function loadState() {
   const saved = localStorage.getItem(STORAGE_KEY);
@@ -506,7 +506,13 @@ function exportStateToFile() {
   const blob = new Blob([content], { type: 'text/plain' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  const date = new Date().toISOString().slice(0,10);
+  const date = new Date()
+  .toLocaleString("sv-SE", {
+    timeZone: "America/Sao_Paulo"
+  })
+  .replace(" ", "T");
+
+
   a.href = url;
   a.download = `torneio_litfut_${date}.litfut`;
   a.click();
