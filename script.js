@@ -35,7 +35,52 @@ let state = {
   rounds: {},          // {ligaId: [{num, matches:[{home,away,sH,sA,played}]}]}
   activeFilter: 'EUR-A',
   activeRodFilter: 'EUR-A',
+  hosts: [],           // países sede
 };
+
+// ═══════════════════════════════════════════
+// HOST SELECTION
+// ═══════════════════════════════════════════
+function renderHostSelection() {
+  const container = document.getElementById('hostSelection');
+  const grid = document.getElementById('hostGrid');
+  if (!container || !grid) return;
+
+  if (state.drawn || state.started) {
+    container.style.display = 'none';
+    return;
+  }
+  container.style.display = 'block';
+
+  let allTeams = [];
+  Object.keys(CONFS).forEach(c => {
+    CONFS[c].teams.forEach(t => allTeams.push({name:t, conf:c}));
+  });
+  allTeams.sort((a,b) => a.name.localeCompare(b.name));
+
+  grid.innerHTML = allTeams.map(t => {
+    const isSelected = state.hosts.includes(t.name);
+    const flag = CONFS[t.conf].flags[t.name] || '🏳️';
+    return `<div class="host-item ${isSelected?'selected':''}" onclick="toggleHost('${t.name}')">
+      <span class="hflag">${flag}</span>
+      <span>${t.name}</span>
+    </div>`;
+  }).join('');
+}
+
+function toggleHost(name) {
+  if (state.hosts.includes(name)) {
+    state.hosts = state.hosts.filter(h => h !== name);
+  } else {
+    if (state.hosts.length >= 3) {
+      alert('Máximo de 3 países sede.');
+      return;
+    }
+    state.hosts.push(name);
+  }
+  renderHostSelection();
+  saveState();
+}
 
 // ═══════════════════════════════════════════
 // TABS
@@ -75,9 +120,14 @@ function initDrawGrid() {
 let drawRunning = false;
 async function startDraw() {
   if (drawRunning) return;
+  if (state.hosts.length === 0) {
+    alert('Selecione pelo menos 1 país sede.');
+    return;
+  }
   drawRunning = true;
   document.getElementById('btnDraw').disabled = true;
   document.getElementById('btnStartLeague').style.display = 'none';
+  document.getElementById('hostSelection').style.display = 'none';
 
   // reset slots
   initDrawGrid();
@@ -271,13 +321,15 @@ function renderLigas() {
       <tbody>`;
 
   rows.forEach((t,i) => {
-    const posClass = i===0?'pos-q1': i<qualN?'pos-q2':'pos-elim';
+    const isHost = state.hosts.includes(t.name);
+    const posClass = (i < qualN || isHost) ? (i === 0 ? 'pos-q1' : 'pos-q2') : 'pos-elim';
     const saldoC = t.saldo>0?'saldo-pos':t.saldo<0?'saldo-neg':'saldo-zero';
     const saldoS = t.saldo>0?`+${t.saldo}`:t.saldo;
     const flag = conf.flags[t.name]||'🏳️';
+    const hostBadge = isHost ? '<span class="host-badge">Sede</span>' : '';
     html += `<tr>
       <td class="td-pos ${posClass}">${i+1}</td>
-      <td class="td-name"><span style="margin-right:4px">${flag}</span>${esc(t.name)}</td>
+      <td class="td-name"><span style="margin-right:4px">${flag}</span>${esc(t.name)}${hostBadge}</td>
       <td class="td-num">${t.played}</td>
       <td class="td-num">${t.w}</td>
       <td class="td-num">${t.d}</td>
@@ -291,7 +343,8 @@ function renderLigas() {
 
   html += `</tbody></table></div>`;
   if (playedMatches===totalMatches && totalMatches>0) {
-    html = `<div class="alert">🏆 ${ligaId} encerrada! Classificados: <b>${rows.slice(0,qualN).map(t=>t.name).join(', ')}</b></div>` + html;
+    const classificados = rows.filter((t,i) => i < qualN || state.hosts.includes(t.name));
+    html = `<div class="alert">🏆 ${ligaId} encerrada! Classificados: <b>${classificados.map(t=>t.name).join(', ')}</b></div>` + html;
   }
   body.innerHTML = html;
 }
@@ -386,9 +439,10 @@ function editMatch(ligaId,ri,mi) {
 // ═══════════════════════════════════════════
 function resetAll() {
   if (!confirm('Resetar tudo? O progresso será perdido.')) return;
-  state = {drawn:false,started:false,leagueTeams:{},rounds:{},activeFilter:'EUR-A',activeRodFilter:'EUR-A'};
+  state = {drawn:false,started:false,leagueTeams:{},rounds:{},activeFilter:'EUR-A',activeRodFilter:'EUR-A',hosts:[]};
   localStorage.removeItem('litfut_v1_state');
   initDrawGrid();
+  renderHostSelection();
   document.getElementById('btnDraw').textContent='⚽ Iniciar Sorteio';
   document.getElementById('btnDraw').disabled=false;
   document.getElementById('btnStartLeague').style.display='none';
@@ -407,11 +461,16 @@ const STORAGE_KEY = 'litfut_v1_state';
 function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
 function loadState() {
   const saved = localStorage.getItem(STORAGE_KEY);
-  if (!saved) return;
+  if (!saved) {
+    renderHostSelection();
+    return;
+  }
   try {
     const loaded = JSON.parse(saved);
     if (loaded) {
       state = loaded;
+      if (!state.hosts) state.hosts = [];
+      renderHostSelection();
       if (state.drawn) {
         document.getElementById('btnDraw').textContent = '🔀 Novo Sorteio';
         if (!state.started) {
@@ -453,6 +512,7 @@ function serializeState(obj) {
   lines.push(`started:${obj.started}`);
   lines.push(`activeFilter:${obj.activeFilter}`);
   lines.push(`activeRodFilter:${obj.activeRodFilter}`);
+  lines.push(`hosts:${(obj.hosts||[]).join(',')}`);
   
   for (let lg in obj.leagueTeams) {
     lines.push(`teams|${lg}:${obj.leagueTeams[lg].join(',')}`);
@@ -472,13 +532,17 @@ function deserializeState(text) {
   const lines = text.trim().split('\n');
   if (lines[0] !== "LITFUT_SAVE_v1") throw new Error("Formato incompatível");
   
-  let ns = { drawn:false, started:false, leagueTeams:{}, rounds:{}, activeFilter:'EUR-A', activeRodFilter:'EUR-A' };
+  let ns = { drawn:false, started:false, leagueTeams:{}, rounds:{}, activeFilter:'EUR-A', activeRodFilter:'EUR-A', hosts:[] };
   
   lines.forEach(line => {
     if (line.startsWith('drawn:')) ns.drawn = line.split(':')[1] === 'true';
     else if (line.startsWith('started:')) ns.started = line.split(':')[1] === 'true';
     else if (line.startsWith('activeFilter:')) ns.activeFilter = line.split(':')[1];
     else if (line.startsWith('activeRodFilter:')) ns.activeRodFilter = line.split(':')[1];
+    else if (line.startsWith('hosts:')) {
+      const hStr = line.split(':')[1];
+      ns.hosts = hStr ? hStr.split(',') : [];
+    }
     else if (line.startsWith('teams|')) {
       const [lg, teamsStr] = line.slice(6).split(':');
       ns.leagueTeams[lg] = teamsStr.split(',');
